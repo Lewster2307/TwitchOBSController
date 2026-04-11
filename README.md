@@ -38,7 +38,13 @@ websocket-client==1.9.0
    .\.venv\Scripts\pip.exe install -r .\requirements.txt
    ```
 
-4. **Configure the application**:
+4. **Set up OBS WebSocket (requires newer OBS versions with built-in WebSocket support or install the plugin for older versions)**:
+   - Tools > WebSockets Server Settings
+   - Enable WebSockets server
+   - Configure the server port (usually 4455) and password in OBS
+   - Ensure the host and port match your `config.json` settings
+
+5. **Configure the application**:
    - Edit `config.json` with your settings:
      ```json
         {
@@ -52,12 +58,6 @@ websocket-client==1.9.0
             "OBS_PW": "PASSWORD_HERE"
         }
      ```
-
-5. **Set up OBS WebSocket (requires newer OBS versions with built-in WebSocket support or install the plugin for older versions)**:
-   - Tools > WebSockets Server Settings
-   - Enable WebSockets server
-   - Configure the server port (usually 4455) and password in OBS
-   - Ensure the host and port match your `config.json` settings
 
 ## Usage
 
