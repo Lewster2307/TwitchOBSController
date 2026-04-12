@@ -15,6 +15,7 @@ class TwitchOBSController:
         self.root = root
         self.root.title("Twitch OBS Remote")
         self.root.geometry("400x350")
+        self.root.resizable(False, False)
         
         self.config = self.load_config()
         self.running = False
@@ -208,15 +209,25 @@ class TwitchOBSController:
                         
                         match = re.search(r':(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :(.+)', line)
                         if match:
-                            user, msg = match.group(1).lower(), match.group(2).strip().lower()
+                            user, msg = match.group(1).lower(), match.group(2).strip()
                             
                             if user in [u.lower() for u in self.config.get('ALLOWED_USERS', [])]:
                                 if self.obs_connected:
                                     try:
-                                        if msg.startswith("!start"):
+                                        if msg.lower().startswith("!start"):
                                             self.obs_client.start_stream()
-                                        elif msg.startswith("!stop"):
+                                        elif msg.lower().startswith("!stop"):
                                             self.obs_client.stop_stream()
+                                        elif msg.lower().startswith("!scene "):
+                                            # Extracts everything after "!scene "
+                                            raw_name = msg[7:].strip()
+                                            # Remove non-printable characters and trim whitespace
+                                            scene_name = "".join(char for char in raw_name if char.isprintable())
+                                            scene_name = scene_name.encode("ascii", "ignore").decode("ascii").strip()
+
+                                            # Switch Scene if name is not empty
+                                            if scene_name:
+                                                self.obs_client.set_current_program_scene(scene_name)
                                     except Exception as e:
                                         print(f"OBS Command Error: {e}")
                 except socket.timeout: continue 

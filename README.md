@@ -5,7 +5,7 @@ A Python application that allows Twitch chat users to remotely control OBS (Open
 ## Features
 
 - **Twitch Chat Integration**: Connects to Twitch IRC to monitor chat messages
-- **OBS Control**: Start and stop streaming directly from Twitch chat
+- **OBS Control**: Start and stop streaming and change scenes directly from Twitch chat
 - **User Access Control**: Only specified users can execute commands
 - **Connection Monitoring**: Real-time GUI status indicators for both Twitch and OBS connections
 - **Configuration Management**: Easy-to-edit JSON config file
@@ -86,6 +86,7 @@ Once the tool is running, authorized users can control OBS via Twitch chat:
 
 - **`!start`** - Start streaming in OBS
 - **`!stop`** - Stop streaming in OBS
+- **`!scene <scene_name>`** - Switch to a specific scene in OBS (<scene_name> is case-sensitive)
 
 **Example**:
 ```
