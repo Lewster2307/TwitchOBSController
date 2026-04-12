@@ -6,7 +6,7 @@ import os
 import subprocess
 import tkinter as tk
 from tkinter import messagebox
-from obswebsocket import obsws, requests
+import obsws_python as obs
 
 CONFIG_FILE = "config.json"
 
@@ -18,7 +18,7 @@ class TwitchOBSController:
         
         self.config = self.load_config()
         self.running = False
-        self.obs = None
+        self.obs_client = None
         self.sock = None
         self.obs_connected = False
 
@@ -57,7 +57,6 @@ class TwitchOBSController:
         self.monitor_connections()
 
     def load_config(self):
-        """Creates a blank placeholder config if none exists."""
         placeholder = {
             "TWITCH_CHANNEL": "YOUR_CHANNEL_HERE",
             "ALLOWED_USERS": ["USER1", "USER2"],
@@ -73,14 +72,10 @@ class TwitchOBSController:
             return json.load(f)
 
     def is_config_valid(self):
-        """Checks if the user has replaced placeholder values."""
         invalid_triggers = ["YOUR_CHANNEL_HERE", "PASSWORD_HERE", ""]
         channel = self.config.get("TWITCH_CHANNEL", "")
         password = self.config.get("OBS_PW", "")
-        
-        if channel in invalid_triggers or password in invalid_triggers:
-            return False
-        return True
+        return channel not in invalid_triggers and password not in invalid_triggers
 
     def open_config_file(self):
         if os.name == 'nt':
@@ -121,7 +116,7 @@ class TwitchOBSController:
             # OBS Check
             if self.obs_connected:
                 try:
-                    self.obs.call(requests.GetVersion())
+                    self.obs_client.get_version()
                     self.update_status(self.obs_label, "OBS: Connected ✅", "green")
                 except:
                     self.obs_connected = False
@@ -133,18 +128,20 @@ class TwitchOBSController:
 
     def attempt_obs_connection(self):
         try:
-            temp_obs = obsws(self.config['OBS_HOST'], self.config['OBS_PORT'], self.config['OBS_PW'])
-            temp_obs.connect()
-            self.obs = temp_obs
+            self.obs_client = obs.ReqClient(
+                host=self.config['OBS_HOST'], 
+                port=self.config['OBS_PORT'], 
+                password=self.config['OBS_PW'],
+                timeout=3
+            )
             self.obs_connected = True
-        except:
+        except Exception:
             self.obs_connected = False
 
     def toggle_tool(self):
         if not self.running:
-            # Check if config is still placeholders
             if not self.is_config_valid():
-                messagebox.showerror("Config Error", "Please edit config.json and replace placeholder values before starting.")
+                messagebox.showerror("Config Error", "Please edit config.json and replace placeholder values.")
                 return
 
             self.running = True
@@ -164,10 +161,9 @@ class TwitchOBSController:
                 self.sock.close()
             except: pass
             self.sock = None
-        if self.obs:
-            try: self.obs.disconnect()
-            except: pass
-            self.obs = None
+        
+        self.obs_client = None
+        
         self.root.after(0, lambda: self.update_status(self.obs_label, "OBS: Disconnected", "red"))
         self.root.after(0, lambda: self.update_status(self.twitch_label, "Twitch: Disconnected", "red"))
 
@@ -179,7 +175,7 @@ class TwitchOBSController:
             self.sock = socket.socket()
             self.sock.settimeout(1.0)
             self.sock.connect(("irc.chat.twitch.tv", 6667))
-            self.sock.send(f"PASS blah\r\n".encode('utf-8'))
+            self.sock.send(f"PASS anonymous\r\n".encode('utf-8'))
             self.sock.send(f"NICK justinfan12345\r\n".encode('utf-8'))
             self.sock.send(f"JOIN {clean_channel}\r\n".encode('utf-8'))
 
@@ -196,17 +192,21 @@ class TwitchOBSController:
                         if line.startswith('PING'):
                             self.sock.send("PONG\r\n".encode('utf-8'))
                             continue
+                        
                         match = re.search(r':(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :(.+)', line)
                         if match:
                             user, msg = match.group(1).lower(), match.group(2).strip().lower()
+                            
+                            # Check if user is allowed
                             if user in [u.lower() for u in self.config.get('ALLOWED_USERS', [])]:
                                 if self.obs_connected:
                                     try:
                                         if msg.startswith("!start"):
-                                            self.obs.call(requests.StartStream())
+                                            self.obs_client.start_stream()
                                         elif msg.startswith("!stop"):
-                                            self.obs.call(requests.StopStream())
-                                    except: pass
+                                            self.obs_client.stop_stream()
+                                    except Exception as e:
+                                        print(f"OBS Command Error: {e}")
                 except socket.timeout: continue 
                 except OSError: break 
         except Exception as e:

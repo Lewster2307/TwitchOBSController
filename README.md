@@ -20,7 +20,7 @@ A Python application that allows Twitch chat users to remotely control OBS (Open
 ### Python Dependencies
 
 ```
-obs-websocket-py==1.0
+obsws-python==1.8.0
 websocket-client==1.9.0
 ```
 
@@ -38,7 +38,7 @@ websocket-client==1.9.0
    .\.venv\Scripts\pip.exe install -r .\requirements.txt
    ```
 
-4. **Set up OBS WebSocket (requires newer OBS versions with built-in WebSocket support or install the plugin for older versions)**:
+4. **Set up OBS WebSocket (requires OBS Studio version 28 or newer for built-in WebSocket support or install the [plugin](https://github.com/obsproject/obs-websocket/releases/tag/5.0.0) for older versions)**:
    - Tools > WebSockets Server Settings
    - Enable WebSockets server
    - Configure the server port (usually 4455) and password in OBS
