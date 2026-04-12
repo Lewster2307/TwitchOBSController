@@ -14,7 +14,7 @@ class TwitchOBSController:
     def __init__(self, root):
         self.root = root
         self.root.title("Twitch OBS Remote")
-        self.root.geometry("400x380")
+        self.root.geometry("400x350")
         
         self.config = self.load_config()
         self.running = False
@@ -43,6 +43,9 @@ class TwitchOBSController:
 
         self.twitch_label = tk.Label(status_frame, text="Twitch: Disconnected", fg="red")
         self.twitch_label.pack(anchor="w")
+
+        self.stream_status_label = tk.Label(status_frame, text="Stream: Offline", fg="gray")
+        self.stream_status_label.pack(anchor="w")
 
         self.user_frame = tk.LabelFrame(root, text="Allowed Users", padx=10, pady=10)
         self.user_frame.pack(padx=20, pady=10, fill="x")
@@ -118,9 +121,18 @@ class TwitchOBSController:
                 try:
                     self.obs_client.get_version()
                     self.update_status(self.obs_label, "OBS: Connected ✅", "green")
+
+                    # Check if stream is currently active
+                    stream_data = self.obs_client.get_stream_status()
+                    if stream_data.output_active:
+                        self.update_status(self.stream_status_label, "Stream: LIVE 🔴", "red")
+                    else:
+                        self.update_status(self.stream_status_label, "Stream: Offline", "gray")
+
                 except:
                     self.obs_connected = False
                     self.update_status(self.obs_label, "OBS: Connection Lost (Searching...) ❌", "orange")
+                    self.update_status(self.stream_status_label, "Stream: Unknown", "gray")
             else:
                 threading.Thread(target=self.attempt_obs_connection, daemon=True).start()
 
@@ -166,6 +178,7 @@ class TwitchOBSController:
         
         self.root.after(0, lambda: self.update_status(self.obs_label, "OBS: Disconnected", "red"))
         self.root.after(0, lambda: self.update_status(self.twitch_label, "Twitch: Disconnected", "red"))
+        self.root.after(0, lambda: self.update_status(self.stream_status_label, "Stream: Offline", "gray"))
 
     def run_twitch_backend(self):
         try:
@@ -197,7 +210,6 @@ class TwitchOBSController:
                         if match:
                             user, msg = match.group(1).lower(), match.group(2).strip().lower()
                             
-                            # Check if user is allowed
                             if user in [u.lower() for u in self.config.get('ALLOWED_USERS', [])]:
                                 if self.obs_connected:
                                     try:
