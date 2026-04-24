@@ -63,7 +63,7 @@ Once the tool is running, authorized users can control OBS via Twitch chat:
 | :-------------- | :------------------ | :---- |
 | `!start`        | **Start Streaming** | Triggers the "Start Streaming" command in OBS. |
 | `!stop`         | **Stop Streaming**  | Triggers the "Stop Streaming" command in OBS. |
-| `!scene <name>` | **Change Scene**    | Switches to the specified scene. Name must match OBS **exactly** (case-sensitive). |
+| `!scene <name>` | **Change Scene**    | Switches to the specified scene. Checks for an exact match first, then falls back to a case-insensitive search. |
 
 **Example**:
 ```

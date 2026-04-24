@@ -13,7 +13,7 @@ import obsws_python as obs
 from packaging import version
 from typing import Dict, Any
 
-VERSION = "2.1.3"
+VERSION = "2.1.4"
 CONFIG_FILE = "settings.dat"
 
 # ==========================================
@@ -187,12 +187,25 @@ class TwitchBot:
             elif cmd.startswith("!stop"):
                 self.obs_manager.execute_command("stop")
             elif cmd.startswith("!scene "):
-                scene_list = self.obs_manager.get_scene_list()
                 raw_name = msg[7:].strip()
                 scene_name = "".join(char for char in raw_name if char.isprintable()).strip()  # Remove non-printable characters
                 scene_name = scene_name.encode("ascii", "ignore").decode("ascii").strip()  # Remove non-ASCII characters (important because spamprotector can inject weird unicode chars)
-                if scene_name and scene_name in [s['sceneName'] for s in scene_list.scenes]:
-                    self.obs_manager.execute_command("scene", scene_name)
+
+                scene_list_response = self.obs_manager.get_scene_list()
+                scene_list = [s['sceneName'] for s in scene_list_response.scenes]
+
+                found_match = None
+                # prioritize case-sensitive exact match
+                if scene_name in scene_list:
+                    found_match = scene_name
+                else:
+                    # otherwise take first case-insensitive match
+                    for scene in scene_list:
+                        if scene.lower() == scene_name.lower():
+                            found_match = scene
+                            break
+                if found_match:
+                    self.obs_manager.execute_command("scene", found_match)
 
 
 # ==========================================
