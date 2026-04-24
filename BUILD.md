@@ -18,10 +18,10 @@
 
 4. **Build the executable (windows)**
    ```bash
-   pyinstaller --onefile --noconsole --name "TwitchOBSController" script.py
+   pyinstaller --onefile --noconsole --name "IRL-OBS-Commander" script.py
    ```
     - `--onefile`: Creates a single executable file.
     - `--noconsole`: Hides the console window when running the application.
     - `--name`: Specifies the name of the output executable.
 
-5. The generated executable will be located in the `dist` folder as `TwitchOBSController.exe`.
+5. The generated executable will be located in the `dist` folder as `IRL-OBS-Commander.exe`.

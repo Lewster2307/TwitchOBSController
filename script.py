@@ -177,7 +177,7 @@ class TwitchOBSApp:
     """Handles the CustomTkinter GUI and orchestrates the backend managers."""
     def __init__(self, root: ctk.CTk):
         self.root = root
-        self.root.title("Twitch OBS Remote")
+        self.root.title("IRL OBS Commander")
         
         self.config = ConfigManager.load()
         self.obs = OBSManager(self.config)
@@ -217,14 +217,14 @@ class TwitchOBSApp:
         # Header & Alerts
         self.alert_label = ctk.CTkLabel(self.main, text="", font=ctk.CTkFont(size=12, weight="bold"), anchor="w")
         self.alert_label.pack(side="bottom", fill="x", pady=(5, 0))
-        ctk.CTkLabel(self.main, text="Twitch OBS Remote", font=ctk.CTkFont(size=24, weight="bold")).pack(pady=(10, 20))
+        ctk.CTkLabel(self.main, text="IRL OBS Commander", font=ctk.CTkFont(size=24, weight="bold")).pack(pady=(10, 20))
 
         # Status Card
         self.status_card = ctk.CTkFrame(self.main)
         self.status_card.pack(fill="x", pady=5)
         ctk.CTkLabel(self.status_card, text="SYSTEM STATUS", font=ctk.CTkFont(size=11, weight="bold"), text_color="#747D8C").pack(anchor="w", padx=15, pady=(10, 5))
         
-        self.waiting_label = ctk.CTkLabel(self.status_card, text="Waiting for controller to start...", font=ctk.CTkFont(size=14, slant="italic"), text_color="#95a5a6")
+        self.waiting_label = ctk.CTkLabel(self.status_card, text="Waiting for commander to start...", font=ctk.CTkFont(size=14, slant="italic"), text_color="#95a5a6")
         self.obs_label = ctk.CTkLabel(self.status_card, text="OBS: Reconnecting", font=ctk.CTkFont(size=14))
         self.twitch_label = ctk.CTkLabel(self.status_card, text="Twitch: Disconnected", font=ctk.CTkFont(size=14))
         self.stream_label = ctk.CTkLabel(self.status_card, text="Stream: Offline", font=ctk.CTkFont(size=14))
@@ -237,7 +237,7 @@ class TwitchOBSApp:
         self.user_list_label.pack(padx=20, pady=(0, 15))
 
         # Start Button
-        self.btn_toggle = ctk.CTkButton(self.main, text="START CONTROLLER", fg_color="#27ae60", hover_color="#2ecc71", font=ctk.CTkFont(size=15, weight="bold"), height=45, command=self.toggle_system)
+        self.btn_toggle = ctk.CTkButton(self.main, text="START COMMANDER", fg_color="#27ae60", hover_color="#2ecc71", font=ctk.CTkFont(size=15, weight="bold"), height=45, command=self.toggle_system)
         self.btn_toggle.pack(fill="x", pady=(10, 0))
 
     # --- UI Status Management ---
@@ -269,14 +269,14 @@ class TwitchOBSApp:
                 self.show_alert("Please update settings first.")
                 return
             
-            self.btn_toggle.configure(text="STOP CONTROLLER", fg_color="#c0392b", hover_color="#e74c3c")
+            self.btn_toggle.configure(text="STOP COMMANDER", fg_color="#c0392b", hover_color="#e74c3c")
             self.show_active_status()
             self.twitch.start()
             self.monitor_loop()
         else:
             self.twitch.stop()
             self.obs.disconnect()
-            self.btn_toggle.configure(text="START CONTROLLER", fg_color="#27ae60", hover_color="#2ecc71")
+            self.btn_toggle.configure(text="START COMMANDER", fg_color="#27ae60", hover_color="#2ecc71")
             self.show_waiting_status()
 
     def monitor_loop(self):
@@ -316,7 +316,7 @@ class TwitchOBSApp:
     def handle_menu(self, choice):
         if choice == "Settings":
             if self.twitch.running:
-                self.show_alert("Stop the controller before changing settings.")
+                self.show_alert("Stop the commander before changing settings.")
             else:
                 self.open_settings()
         elif choice == "Exit":

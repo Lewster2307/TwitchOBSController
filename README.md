@@ -1,6 +1,28 @@
-# Twitch OBS Remote Controller
+# IRL OBS Commander
 
-A Python application that allows Twitch chat users to remotely control OBS (Open Broadcaster Software) streaming via IRC chat commands.
+A application that allows Twitch chat users to remotely control OBS (Open Broadcaster Software) streaming via IRC chat commands.
+
+<table>
+  <tr>
+    <td>
+      <p align="center"><b>Main Interface</b></p>
+      <img src="img/IRL-OBS-Commander_preview.png" height="400">
+    </td>
+    <td>
+      <p align="center"><b>Settings Menu</b></p>
+      <img src="img/IRL-OBS-Commander_settings.png" height="400">
+    </td>
+  </tr>
+</table>
+
+## The IRL Streamer Use Case
+
+This tool was specifically designed with **IRL (In Real Life)** streamers in mind. When you are streaming outdoors via an SRTLA server (like Belabox or OBS(N)), your OBS computer is often miles away at home.
+
+- **Remote Scene Switching:** If your mobile signal drops or you want to switch from your "Camera" scene to a "BRB" screen, you can't simply walk over to your PC. With this tool, you or your moderators can switch scenes directly from Twitch chat.
+- **Emergency Stops:** If something happens on camera that needs to be cut immediately, a quick `!stop` command in chat provides an instant safety net.
+- **No Remote Desktop Needed:** Avoid the lag and hassle of trying to use TeamViewer or AnyDesk on a small phone screen while live.
+- **Setup in Minutes:** No complex Twitch OAuth or bot accounts required. Enable OBS WebSocker, run the app, enter to your Twitch channel, and you're ready to go.
 
 ## Features
 
@@ -11,12 +33,12 @@ A Python application that allows Twitch chat users to remotely control OBS (Open
 
 ## Installation & Setup
 
-- Download the latest binary release from the [releases](https://github.com/Lewster2307/TwitchOBSController/releases) page
+- Download the latest binary release from the [releases](https://github.com/Lewster2307/IRL-OBS-Commander/releases) page
 - **Set up OBS WebSocket (requires OBS Studio version 28 or newer for built-in WebSocket support or install the [plugin](https://github.com/obsproject/obs-websocket/releases/tag/5.0.0) for older versions)**:
    - Tools > WebSockets Server Settings
    - Enable WebSockets server
    - Configure the server port (usually 4455) and password in OBS
-- Start the TwitchOBSController.exe to auto generate the `settings.dat` file
+- Start the IRL-OBS-Commander.exe to auto generate the `settings.dat` file
 - Go to Menu > Settings to enter your Twitch channel name, allowed users, and OBS credentials.
 
 > [!NOTE]  
@@ -26,7 +48,7 @@ A Python application that allows Twitch chat users to remotely control OBS (Open
 
 ### Interface
 
-- **Waiting for controller to start:** App is idle and waiting for user to start the controller
+- **Waiting for commander to start:** App is idle and waiting for user to start the commander
 - **OBS Status:**
   - **Connected:** Ready for commands.
   - **Reconnecting:** Attempting to find OBS (Check if OBS is open and websocket is enabled).**
@@ -132,7 +154,7 @@ Instructions for building a standalone executable using PyInstaller can be found
 ### File Structure
 
 ```
-TwitchOBSController/
+IRL-OBS-Commander/
 ├── script.py                    # Main application
 ├── requirements.txt             # Python dependencies
 ├── .gitignore                   # Git ignore file
@@ -143,7 +165,7 @@ TwitchOBSController/
 ├── .venv/                       # Virtual environment
 ├── dist/                        # Build output
 ├── build/                       # Build artifacts
-└── TwitchOBSController.spec     # PyInstaller spec file
+└── IRL-OBS-Commander.spec     # PyInstaller spec file
 ```
 
 </details>
