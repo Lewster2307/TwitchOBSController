@@ -3,16 +3,17 @@
 1. **Create a virtual environment** (if not already present):
    ```bash
    python -m venv .venv
+   .\.venv\Scripts\activate
    ```
 
 2. **Install dependencies** (if not already installed):
    ```bash
-   .\.venv\Scripts\pip.exe install -r .\requirements.txt
+   pip install -r .\requirements.txt
    ```
 
 3. **Install PyInstaller**
    ```bash
-   .\.venv\Scripts\pip.exe install pyinstaller
+   pip install pyinstaller
    ```
 
 4. **Build the executable (windows)**

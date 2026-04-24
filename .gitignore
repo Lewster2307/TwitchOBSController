@@ -1,4 +1,5 @@
 .venv
+.dat
 
 # PyInstaller outputs
 build/
