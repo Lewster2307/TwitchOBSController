@@ -6,10 +6,12 @@ import os
 import zlib
 import base64
 import time
+import webbrowser
 import customtkinter as ctk
 import obsws_python as obs
 from typing import Dict, Any
 
+VERSION = "2.1.2"
 CONFIG_FILE = "settings.dat"
 
 # ==========================================
@@ -370,6 +372,16 @@ class TwitchOBSApp:
                 win.destroy()
             except Exception as e:
                 self.show_alert(f"Save Error: {e}")
+
+        version_info = ctk.CTkLabel(
+            win, 
+            text=f"IRL OBS Commander v{VERSION}", 
+            font=ctk.CTkFont(size=10), 
+            text_color="#747D8C",
+            cursor="hand2"
+        )
+        version_info.pack(side="bottom", pady=10)
+        version_info.bind("<Button-1>", lambda e: webbrowser.open("https://github.com/Lewster2307/IRL-OBS-Commander"))
 
         ctk.CTkButton(win, text="Save", command=save).pack(pady=10)
 
