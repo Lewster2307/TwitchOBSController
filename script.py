@@ -149,7 +149,6 @@ class TwitchBot:
                 while self.running:
                     try:
                         new_data = self.sock.recv(2048).decode('utf-8', errors='ignore')
-                        print(new_data) # Debug: Print raw IRC data
                         if not new_data: break # Connection closed
 
                         self.last_activity = time.time()
