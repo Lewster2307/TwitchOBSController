@@ -76,14 +76,14 @@ User: !scene IRL -> OBS switches to the "IRL" scene
 ### OBS Connection Lost (Orange)
 
 - Verify OBS is running and WebSocket plugin is active
-- Check that `OBS Host` and `OBS Port` in config match your OBS settings
-- Confirm OBS WebSocket password in `OBS Password` is correct
+- Check that `OBS Host`, `OBS Port` and `OBS Password` in settings match your OBS settings
+- OBS WebSocket will auto-reconnect every 10 seconds
 
-### Twitch Connection Lost (Red)
+### Twitch Connection Lost (Orange)
 
 - Check internet connection
 - Verify `Twitch Channel` is correctly configured
-- The tool will auto-reconnect every 3 seconds
+- The IRC connection will auto-reconnect every 1 to 30 seconds (with exponential backoff)
 
 ### Commands Not Working
 
@@ -95,6 +95,7 @@ User: !scene IRL -> OBS switches to the "IRL" scene
 
 ⚠️ **Important**:
 - Store `OBS Password` securely - it provides direct control over OBS
+- Do not share the `settings.dat` file as its content is only ofuscated, not encrypted
 - Only add trusted users to `Allowed Users` to prevent unauthorized access
 
 
